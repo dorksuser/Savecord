@@ -7,12 +7,14 @@ const common = {
   bundle: true,
   minify: production,
   platform: "node",
-  target: "esnext",
+  target: "node16",
+  format: "cjs",
   sourcemap: watch ? true : false,
   treeShaking: true,
   drop: production ? ["console", "debugger"] : [],
   legalComments: "none",
   logLevel: "info",
+  external: ["electron"],
 };
 
 const preloadCommon = {
@@ -20,6 +22,7 @@ const preloadCommon = {
   platform: "browser",
   format: "iife",
   globalName: "Savecord",
+  external: [],
 };
 
 await Promise.all([
@@ -40,13 +43,11 @@ await Promise.all([
         ...common,
         entryPoints: ["src/loader/index.ts"],
         outfile: "dist/loader.js",
-        external: ["electron"],
       }).then(ctx => ctx.watch())
     : esbuild.build({
         ...common,
         entryPoints: ["src/loader/index.ts"],
         outfile: "dist/loader.js",
-        external: ["electron"],
       }),
 
   watch
@@ -64,5 +65,7 @@ await Promise.all([
 
 console.log(`[Build] Complete ${watch ? "(watching...)" : ""}`);
 console.log(`[Build] Mode: ${production ? "PRODUCTION" : "DEVELOPMENT"}`);
+console.log(`[Build] Format: CommonJS (CJS)`);
+console.log(`[Build] Target: Node 16 (Electron compatible)`);
 console.log(`[Build] Tree-shaking: ${common.treeShaking ? "ENABLED" : "DISABLED"}`);
 console.log(`[Build] Console logs: ${production ? "DROPPED" : "KEPT"}`);
