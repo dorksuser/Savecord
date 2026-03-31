@@ -8,9 +8,11 @@
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true}); require('fs').rmSync('build', {recursive: true, force: true})\"",
     "build": "node scripts/build.mjs",
+    "build-installer": "node scripts/build-installer.mjs",
     "dev": "node scripts/build.mjs --watch",
     "dist": "npm run clean && npm run build && npx electron-builder",
-    "dist:win": "npm run clean && npm run build && npx electron-builder --win --x64"
+    "dist:win": "npm run clean && npm run build && npx electron-builder --win --x64",
+    "dist:installer": "npm run clean && npm run build && npm run build-installer && npx electron-builder --config electron-builder-installer.json"
   },
   "build": {
     "appId": "com.savecord.app",

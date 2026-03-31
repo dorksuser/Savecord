@@ -1,0 +1,38 @@
+{
+  "appId": "com.savecord.installer",
+  "productName": "Savecord Installer",
+  "copyright": "Copyright © 2024 dorksuser",
+  "main": "dist/installer/main.js",
+  "compression": "maximum",
+  "asar": false,
+  "directories": {
+    "output": "build/installer",
+    "buildResources": "resources"
+  },
+  "files": [
+    "dist/installer/**/*",
+    "dist/loader.js",
+    "dist/preload.js",
+    "dist/injector.js",
+    "config/**/*",
+    "package.json"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      }
+    ],
+    "requestedExecutionLevel": "requireAdministrator",
+    "artifactName": "${productName}-${version}-Setup.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Savecord Installer",
+    "license": "LICENSE"
+  }
+}

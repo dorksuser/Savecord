@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savecord Installer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Consolas', 'Courier New', monospace;
+      background: #000000;
+      color: #FFFFFF;
+      overflow: hidden;
+      user-select: none;
+      -webkit-app-region: drag;
+    }
+
+    .container {
+      width: 600px;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-size: 48px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .console {
+      flex: 1;
+      background: #0a0a0a;
+      border: 1px solid #1E3A8A;
+      border-radius: 4px;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 11px;
+      line-height: 1.4;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(30, 58, 138, 0.3);
+    }
+
+    .console::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .console::-webkit-scrollbar-track {
+      background: #000;
+    }
+
+    .console::-webkit-scrollbar-thumb {
+      background: #1E3A8A;
+      border-radius: 4px;
+    }
+
+    .log-entry {
+      margin-bottom: 4px;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .log-sys { color: #3B82F6; }
+    .log-success { color: #10B981; }
+    .log-error { color: #EF4444; }
+    .log-warn { color: #F59E0B; }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      -webkit-app-region: no-drag;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Consolas', monospace;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      color: #FFFFFF;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: #1a1a1a;
+      color: #FFFFFF;
+      border: 1px solid #333;
+    }
+
+    .btn-secondary:hover {
+      background: #2a2a2a;
+      border-color: #1E3A8A;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      font-size: 10px;
+      color: #666;
+      border-top: 1px solid #1a1a1a;
+      margin-top: 10px;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: transparent;
+      color: #666;
+      font-size: 20px;
+      cursor: pointer;
+      -webkit-app-region: no-drag;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: #EF4444;
+    }
+  </style>
+</head>
+<body>
+  <button class="close-btn" onclick="window.close()">×</button>
+  
+  <div class="container">
+    <div class="header">
+      <div class="logo">⬛ SAVECORD</div>
+      <div class="subtitle">High-Performance Discord Modification</div>
+    </div>
+
+    <div class="console" id="console">
+      <div class="log-entry log-sys">[SYS] Installer initialized</div>
+      <div class="log-entry log-sys">[SYS] Ready to inject</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="installBtn" onclick="install()">
+        Initialize Savecord
+      </button>
+      <button class="btn btn-secondary" id="uninstallBtn" onclick="uninstall()">
+        Restore Original
+      </button>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span id="statusText">Ready</span>
+      </div>
+      <span>v1.0.0 | Optimized for G850</span>
+    </div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    function log(message, type = 'sys') {
+      const console = document.getElementById('console');
+      const entry = document.createElement('div');
+      entry.className = `log-entry log-${type}`;
+      entry.textContent = message;
+      console.appendChild(entry);
+      console.scrollTop = console.scrollHeight;
+    }
+
+    function setStatus(text) {
+      document.getElementById('statusText').textContent = text;
+    }
+
+    function setButtonsEnabled(enabled) {
+      document.getElementById('installBtn').disabled = !enabled;
+      document.getElementById('uninstallBtn').disabled = !enabled;
+    }
+
+    async function install() {
+      setButtonsEnabled(false);
+      setStatus('Installing...');
+      log('[SYS] Starting installation process...', 'sys');
+      
+      try {
+        const result = await ipcRenderer.invoke('install');
+        
+        if (result.success) {
+          log(`[SUCCESS] ${result.message}`, 'success');
+          log('[SYS] Injection complete', 'success');
+          setStatus('Installed');
+          
+          setTimeout(() => {
+            const launchBtn = document.createElement('button');
+            launchBtn.className = 'btn btn-primary';
+            launchBtn.textContent = 'Launch Discord';
+            launchBtn.onclick = () => ipcRenderer.invoke('launch-discord');
+            document.querySelector('.actions').innerHTML = '';
+            document.querySelector('.actions').appendChild(launchBtn);
+          }, 1000);
+        } else {
+          log(`[ERROR] ${result.message}`, 'error');
+          setStatus('Failed');
+          setButtonsEnabled(true);
+        }
+      } catch (err) {
+        log(`[ERROR] ${err.message}`, 'error');
+        setStatus('Error');
+        setButtonsEnabled(true);
+      }
+    }
+
+    async function uninstall() {
+      setButtonsEnabled(false);
+      setStatus('Uninstalling...');
+      log('[SYS] Starting uninstall process...', 'sys');
+      
+      try {
+        const result = await ipcRenderer.invoke('uninstall');
+        
+        if (result.success) {
+          log(`[SUCCESS] ${result.message}`, 'success');
+          setStatus('Restored');
+        } else {
+          log(`[ERROR] ${result.message}`, 'error');
+          setStatus('Failed');
+        }
+      } catch (err) {
+        log(`[ERROR] ${err.message}`, 'error');
+        setStatus('Error');
+      } finally {
+        setButtonsEnabled(true);
+      }
+    }
+
+    ipcRenderer.on('log', (event, message, type) => {
+      log(message, type);
+    });
+
+    log('[SYS] Searching for Discord installations...', 'sys');
+    ipcRenderer.invoke('scan-discord').then(installations => {
+      if (installations.length > 0) {
+        installations.forEach(inst => {
+          log(`[FOUND] Discord ${inst.variant} v${inst.version}`, 'success');
+        });
+      } else {
+        log('[WARN] No Discord installations found', 'warn');
+        setButtonsEnabled(false);
+      }
+    });
+  </script>
+</body>
+</html>
