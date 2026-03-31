@@ -1,15 +1,18 @@
 import { definePlugin } from "../../types/plugin";
 import { Webpack } from "../../webpack";
 import { Storage } from "../storage";
+import { configManager } from "../config-manager";
 
 const storage = new Storage();
 const unpatches: Array<() => void> = [];
 
-// DEBUG_NOTE: API key moved to obfuscated function to prevent easy extraction
-// Original issue: Hardcoded key visible in minified bundle
+// Dynamic API key from user configuration
 const getApiKey = (): string => {
-  const parts = ["8aad8ed1b61c2935", "210ff55b585864dc", "509f87d754dda756", "ec851b385de5a5f3"];
-  return parts.join("");
+  return configManager.getVTApiKey();
+};
+
+const isShieldActive = (): boolean => {
+  return configManager.isShieldEnabled();
 };
 
 const VT_API_URL = "https://www.virustotal.com/api/v3/files/";
@@ -135,13 +138,66 @@ class SecurityShield {
     
     if (!this.enabled) return;
     
+    // Check if API key is configured
+    if (!isShieldActive()) {
+      console.warn("[SecurityShield] Shield Inactive - No API key configured");
+      this.showInactiveWarning();
+      return;
+    }
+    
     this.setupVirusTotalScanning();
     this.setupTokenProtection();
     this.setupPanicButton();
     
-    // DEBUG_NOTE: Removed API key from log
-    // Original issue: Key visible in console
-    console.log("[SecurityShield] Initialized");
+    console.log("[SecurityShield] Initialized with user API key");
+  }
+  
+  private showInactiveWarning(): void {
+    requestIdleCallback(() => {
+      const warning = document.createElement("div");
+      warning.className = "savecord-shield-inactive-warning";
+      warning.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(239, 68, 68, 0.9);
+        color: #FFFFFF;
+        padding: 16px 20px;
+        border-radius: 8px;
+        font-family: 'Consolas', monospace;
+        font-size: 13px;
+        font-weight: bold;
+        z-index: 999999;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        animation: slideIn 0.3s ease-out;
+      `;
+      warning.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">🛡️</span>
+          <div>
+            <div>Shield Inactive</div>
+            <div style="font-size: 11px; opacity: 0.9; margin-top: 4px;">
+              Configure API key in Savecord settings
+            </div>
+          </div>
+        </div>
+      `;
+      
+      warning.onclick = () => {
+        warning.remove();
+        // Open settings panel
+        window.dispatchEvent(new CustomEvent("savecord:open-settings", { detail: { tab: "security" } }));
+      };
+      
+      document.body.appendChild(warning);
+      
+      // Auto-hide after 10 seconds
+      setTimeout(() => {
+        warning.style.animation = "slideOut 0.3s ease-in";
+        setTimeout(() => warning.remove(), 300);
+      }, 10000);
+    });
   }
   
   // DEBUG_NOTE: Combined VT and QR listeners into single MESSAGE_CREATE handler

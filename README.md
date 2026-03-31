@@ -78,10 +78,6 @@ cd Savecord
 # Install dependencies
 npm install
 
-# Configure environment
-cp .env.example .env
-# Edit .env and add your VirusTotal API key
-
 # Build
 npm run build
 
@@ -90,6 +86,21 @@ node dist/injector.js
 
 # Restart Discord
 ```
+
+### 🔑 Security Shield Configuration
+
+Savecord uses **your own** VirusTotal API key for malware scanning. This ensures complete privacy - your data never touches our servers.
+
+1. Get your free API key: [VirusTotal API Key](https://www.virustotal.com/gui/my-apikey)
+2. Open Discord settings → Savecord → Security Shield
+3. Paste your API key and click "Test Connection"
+4. Click "Save Key" to enable real-time malware scanning
+
+**Why this approach?**
+- ✅ Full control over your privacy
+- ✅ No third-party key sharing
+- ✅ Direct communication with VirusTotal
+- ✅ Your data stays yours
 
 ---
 

@@ -4,6 +4,7 @@ import { Webpack } from "../webpack";
 import { Patcher } from "../webpack/patcher";
 import { ThemeManager } from "../themes";
 import { Disposable } from "../utils/performance";
+import { injectSecuritySettings } from "./ui/settings-integration";
 
 const SAVECORD_DEFAULT_CSS = `
   /* Savecord Default Theme - Optimized for HD 6670 */
@@ -145,6 +146,7 @@ class PluginManager {
     
     requestIdleCallback(() => {
       this.loadPluginsByPriority();
+      injectSecuritySettings();
     });
   }
 
