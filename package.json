@@ -1,0 +1,67 @@
+{
+  "name": "savecord",
+  "version": "1.0.0",
+  "description": "Lightweight Discord modification optimized for low-end hardware (Intel G850 / AMD HD 6670)",
+  "author": "dorksuser",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/loader.js",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs --watch",
+    "dist": "npm run build && npx electron-builder",
+    "dist:win": "npm run build && npx electron-builder --win --x64"
+  },
+  "build": {
+    "appId": "com.savecord.app",
+    "productName": "Savecord",
+    "copyright": "Copyright © 2024 dorksuser",
+    "compression": "maximum",
+    "asar": true,
+    "asarUnpack": [
+      "dist/injector.js"
+    ],
+    "directories": {
+      "output": "build",
+      "buildResources": "resources"
+    },
+    "files": [
+      "dist/**/*",
+      "config/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Savecord",
+      "license": "LICENSE"
+    }
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.0",
+    "@types/node": "^20.0.0",
+    "@types/yauzl": "^2.10.0",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.13.3",
+    "esbuild": "^0.19.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.10",
+    "follow-redirects": "^1.15.0",
+    "yauzl": "^2.10.0"
+  }
+}

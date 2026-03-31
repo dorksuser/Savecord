@@ -1,0 +1,7 @@
+{
+  "blockTelemetry": true,
+  "spoofFingerprint": true,
+  "useProxy": false,
+  "proxyAddress": "socks5://127.0.0.1:9050",
+  "sanitizeMetadata": true
+}
