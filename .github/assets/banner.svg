@@ -1,0 +1,43 @@
+<svg width="1200" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="300" fill="url(#bg)"/>
+  
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#222" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="300" fill="url(#grid)" opacity="0.3"/>
+  
+  <!-- Main title -->
+  <text x="600" y="120" font-family="monospace" font-size="72" font-weight="bold" fill="#fff" text-anchor="middle">
+    SAVECORD
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="160" font-family="monospace" font-size="20" fill="#888" text-anchor="middle">
+    Lightweight Discord Client Modification
+  </text>
+  
+  <!-- Bottom text -->
+  <text x="600" y="200" font-family="monospace" font-size="16" fill="#666" text-anchor="middle">
+    Optimized for Intel Pentium G850 / AMD HD 6670 / 4GB RAM
+  </text>
+  
+  <!-- Decorative elements -->
+  <rect x="400" y="220" width="400" height="2" fill="#333"/>
+  
+  <!-- Version badge -->
+  <rect x="520" y="240" width="160" height="30" rx="5" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+  <text x="600" y="262" font-family="monospace" font-size="14" fill="#0f0" text-anchor="middle">
+    v1.0.0 STABLE
+  </text>
+</svg>
